@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои Игры</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2b2d42, #8d99ae);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Roboto', Arial, sans-serif;
+            color: white;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            background: #fff;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .card {
+            width: 300px;
+            background: linear-gradient(145deg, #1e1f2f, #33354a);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s; 
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3); 
+        }
+
+        .card:hover img {
+            transform: scale(1.1); 
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-content h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .card-content button {
+            background: linear-gradient(145deg, #ff6f61, #e55b50);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(255, 111, 97, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card-content button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 15px rgba(255, 111, 97, 0.6);
+        }
+
+        .card-content button:active {
+            transform: scale(0.95);
+            box-shadow: 0 3px 8px rgba(255, 111, 97, 0.4);
+        }
+
+        .copyMessage {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1000;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                width: 100%;
+                max-width: 350px;
+                margin: 10px;
+            }
+
+            .card-content h3 {
+                font-size: 18px;
+            }
+
+            .card-content button {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            .card-content p {
+                font-size: 14px;
+            }
+
+            .copyMessage {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-content h3 {
+                font-size: 16px;
+            }
+
+            .card-content button {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .card-content p {
+                font-size: 12px;
+            }
+
+            .copyMessage {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Поиск по названию игры..." oninput="searchGames()">
+    </div>
+    <div class="card-container" id="cardContainer"></div>
+
+    <script>
+        function formatNumber(num) {
+            return num.toLocaleString();
+        }
+
+        function copyLink(url, card) {
+            const tempInput = document.createElement("input");
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            const successful = document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            if (successful) {
+                const copyMessage = card.querySelector('.copyMessage');
+                copyMessage.style.display = 'block';
+                setTimeout(() => {
+                    copyMessage.style.display = 'none';
+                }, 2000);
+            } else {
+                alert("Ошибка копирования ссылки.");
+            }
+        }
+
+        const games = [
+            {
+                title: "Fling Things and People",
+                image: "https://tr.rbxcdn.com/180DAY-9ceb24935041a588b60d214884597291/768/432/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/6961824067/Fling-Things-and-People",
+                placeId: "6961824067"
+            },
+            {
+                title: "Trams game 2🚊",
+                image: "https://tr.rbxcdn.com/180DAY-cc1b3905a3d4a5f94eee7f77f7aa750e/256/256/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/85971879745363/Trams-game-2",
+                placeId: "85971879745363"
+            },
+            {
+                title: "Trains",
+                image: "https://tr.rbxcdn.com/180DAY-360919ec816137d12b188beb2e72f7a7/256/256/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/112958189/Trains",
+                placeId: "112958189"
+            },
+            {
+                title: "Developer Donations! 💰",
+                image: "https://tr.rbxcdn.com/180DAY-217bd395828382046f15180077c0a508/384/216/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/133852267322739/Developer-Donations",
+                placeId: "133852267322739"
+            },
+            {
+                title: "PLS DONATE 💸",
+                image: "https://tr.rbxcdn.com/180DAY-3155035a9251a27a34a59ac7bdedc24d/256/256/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/8737602449/PLS-DONATE",
+                placeId: "8737602449"
+            },
+            {
+                title: "Build A Boat For Treasure",
+                image: "https://tr.rbxcdn.com/180DAY-2642774e00b871f246810c45f3ec5faf/256/256/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/537413528/Build-A-Boat-For-Treasure",
+                placeId: "537413528"
+            },
+            {
+                title: "Developer Hub",
+                image: "https://tr.rbxcdn.com/180DAY-ddcfb0a1d6f69ea19dd879ff44e0a27b/256/256/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/9008985963/Developer-Hub",
+                placeId: "9008985963"
+            },
+             {
+                title: "ZOMBIE INVASION",
+                image: "https://tr.rbxcdn.com/180DAY-25c6c484124d242c5fa25c5a10c41d26/256/256/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/10101846733/ZOMBIE-INVASION",
+                placeId: "10101846733"
+            },
+            {
+                title: "cart ride around nothing",
+                image: "https://tr.rbxcdn.com/180DAY-b72d2a7848a7a65e00a99f3e87496016/256/256/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/10660791703/cart-ride-around-nothing",
+                placeId: "10660791703"
+            },
+             {
+                title: "Block Tycoon 🎣",
+                image: "https://tr.rbxcdn.com/180DAY-826aebd413dc1879e2abf98fe9379b3b/256/256/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/8317588085/Block-Tycoon-FISHING-AQUARIUMS",
+                placeId: "8317588085"
+            },
+            {
+                title: "Ore Incremental",
+                image: "https://tr.rbxcdn.com/180DAY-2ca72df8d7e2e0efad88f5cef926142f/768/432/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/130067927738094/CAVERN-Ore-Incremental",
+                placeId: "130067927738094"
+            },
+             {
+                title: "Trams game🚊",
+                image: "https://tr.rbxcdn.com/180DAY-90d5dae96492b3b1ff003658d878e1b0/256/256/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/16149435012/Trams-game-New-Tram",
+                placeId: "16149435012"
+            },
+            {
+                title: "Long trip",
+                image: "https://tr.rbxcdn.com/180DAY-9ec2cb32fcc932bba6f530bdd452f9ab/352/352/Image/Png/noFilter",
+                url: "https://www.roblox.com/games/111009750901328/unnamed",
+                placeId: "111009750901328"
+            },
+            {
+                title: "Trams",
+                image: "https://tr.rbxcdn.com/180DAY-902e8ae87b98b8855051628942cfa8c0/256/256/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/112958130/Trams",
+                placeId: "112958130"
+            },
+            {
+                title: "Train Test",
+                image: "https://tr.rbxcdn.com/180DAY-ef0899d8547b7b4fd172d5ac372825b5/512/512/Image/Webp/noFilter",
+                url: "https://www.roblox.com/games/8127860504/Train-Test",
+                placeId: "8127860504"
+            }
+        ];
+
+        function fetchGameData(placeId, card) {
+            const proxyUrl = 'https://script.google.com/macros/s/AKfycbyhZnnNnZSaquvDlCGl5lsEvhxM_MVICDzaF8F4b39PSeU8CVNrvOGt9F0knKSn-Th-/exec';
+            fetch(`${proxyUrl}?placeId=${placeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    card.querySelector('#playerCount').textContent = `Игроков онлайн: ${formatNumber(data.playerCount)}`;
+                    card.querySelector('#likesCount').textContent = `Лайков: ${formatNumber(data.likes)}`;
+                    card.querySelector('#visitsCount').textContent = `Визитов: ${formatNumber(data.visits)}`;
+                    card.querySelector('#releaseDate').textContent = `Дата выхода: ${data.releaseDate}`;
+                })
+                .catch(error => {
+                    console.error('Ошибка при получении данных:', error);
+                });
+        }
+
+        function shuffleGames(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+        }
+
+        function searchGames() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                if (title.includes(query)) {
+                    card.style.display = 'block'; // Показываем карточку, если совпадает
+                } else {
+                    card.style.display = 'none'; // Скрываем карточку, если не совпадает
+                }
+            });
+        }
+
+        shuffleGames(games);
+
+        games.forEach(game => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.innerHTML = `
+                <img src="${game.image}" alt="${game.title}">
+                <div class="copyMessage">Ссылка скопирована!</div>
+                <div class="card-content">
+                    <h3>${game.title}</h3>
+                    <p id="playerCount">Игроков онлайн: 0</p>
+                    <p id="likesCount">Лайков: 0</p>
+                    <p id="visitsCount">Визитов: 0</p>
+                    <p id="releaseDate">Дата выхода: неизвестно</p>
+                    <button onclick="copyLink('${game.url}', this.closest('.card'))">Скопировать ссылку</button>
+                </div>
+            `;
+            document.getElementById('cardContainer').appendChild(card);
+
+            fetchGameData(game.placeId, card);
+        });
+    </script>
+</body>
+</html>
